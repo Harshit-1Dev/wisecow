@@ -1,0 +1,17 @@
+FROM ubuntu:20.04
+
+# Avoid interactive prompts
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Update and install dependencies
+RUN apt-get update && \
+    apt-get install -y fortune cowsay netcat && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Copy the Wisecow script into the container
+COPY wisecow.sh /usr/local/bin/wisecow.sh
+RUN chmod +x /usr/local/bin/wisecow.sh
+
+# Run the script when container starts
+CMD ["/usr/local/bin/wisecow.sh"]

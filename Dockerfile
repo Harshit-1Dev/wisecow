@@ -1,19 +1,31 @@
-FROM debian:12-slim
+# Base image
+FROM ubuntu:22.04
 
+# Prevent interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update \
-  && apt-get install -y --no-install-recommends \
-     bash \
-     curl \
-     fortune-mod \
-     cowsay \
-     socat \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/*
 
+# Install required packages
+RUN apt-get update && \
+    apt-get install -y \
+    cowsay \
+    fortune-mod \
+    netcat-openbsd \
+    && rm -rf /var/lib/apt/lists/*
+
+# Add cowsay to PATH
+ENV PATH="/usr/games:${PATH}"
+
+# Set working directory
 WORKDIR /app
-COPY wisecow.sh /app/wisecow.sh
-RUN chmod +x /app/wisecow.sh
 
+# Copy application
+COPY wisecow.sh .
+
+# Make it executable
+RUN chmod +x wisecow.sh
+
+# Expose port
 EXPOSE 4499
-CMD ["/app/wisecow.sh"]
+
+# Run the app
+CMD ["./wisecow.sh"]
