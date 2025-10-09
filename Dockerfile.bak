@@ -1,17 +1,31 @@
-FROM ubuntu:20.04
+# Base image
+FROM ubuntu:22.04
 
-# Avoid interactive prompts
+# Prevent interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Update and install dependencies
+# Install required packages
 RUN apt-get update && \
-    apt-get install -y fortune cowsay netcat && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install -y \
+    cowsay \
+    fortune-mod \
+    netcat-openbsd \
+    && rm -rf /var/lib/apt/lists/*
 
-# Copy the Wisecow script into the container
-COPY wisecow.sh /usr/local/bin/wisecow.sh
-RUN chmod +x /usr/local/bin/wisecow.sh
+# Add cowsay to PATH
+ENV PATH="/usr/games:${PATH}"
 
-# Run the script when container starts
-CMD ["/usr/local/bin/wisecow.sh"]
+# Set working directory
+WORKDIR /app
+
+# Copy application
+COPY wisecow.sh .
+
+# Make it executable
+RUN chmod +x wisecow.sh
+
+# Expose port
+EXPOSE 4499
+
+# Run the app
+CMD ["./wisecow.sh"]

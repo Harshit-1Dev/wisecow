@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
         - name: wisecow
-          image: wisecow:v1  # or your GHCR image
+          image: wisecow:v1
           ports:
             - containerPort: 4499
